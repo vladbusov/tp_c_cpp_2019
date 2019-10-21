@@ -24,13 +24,13 @@ install:
   - cd -
 
 before_script:
-  - cd project/Counter
+  - cd Counter
   - clang-format -i -style=Google *.h *.cpp *.c
   - cd -
-  - cd project/tests
+  - cd tests
   - clang-format -i -style=Google *.h *.cpp *.c
   - cd -
-  - cd project/trivialCounter
+  - cd trivialCounter
   - clang-format -i -style=Google *.h *.cpp *.c
   - cd -
 
