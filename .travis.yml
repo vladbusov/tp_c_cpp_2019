@@ -7,6 +7,9 @@ os: linux
 
 compiler: gcc
 
+env:
+  global:
+    CODECOV_TOKEN="b3894ef2-b7b6-4cba-8e8a-c658e61d4c88"
 
 install:
   - sudo apt-get update
@@ -36,11 +39,11 @@ before_script:
 
 
 script:
-  - cmake .
-  - make || travis_terminate 1
-  - valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --leak-resolution=med  --track-origins=yes ./test.out || travis_terminate 1
+  - sudo cmake .
+  - sudo make || travis_terminate 1
+  - valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --leak-resolution=med  --track-origins=yes ./dz2 || travis_terminate 1
 
 after_script:
-  - lcov —capture —directory ./CMakeFiles/task_library.dir/project/src —output-file coverage.info
+  - lcov --capture --directory ./CMakeFiles/dz2.dir/tests --output-file coverage.info
   - bash <(curl -s https://codecov.io/bash)
   - make clean
