@@ -17,7 +17,7 @@ include_directories(
         ./trivialCounter
 )
 
-add_executable(tests/test.cpp Counter/counter.c trivialCounter/trivialCounter.c Counter/counter.h trivialCounter/trivialCounter.h)
+add_executable(dz2 tests/test.cpp Counter/counter.c trivialCounter/trivialCounter.c Counter/counter.h trivialCounter/trivialCounter.h)
 
 
 
