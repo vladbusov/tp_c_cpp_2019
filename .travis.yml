@@ -25,13 +25,13 @@ install:
 
 before_script:
   - cd Counter
-  - clang-format -i -style=Google *.h *.cpp *.c
+  - clang-format -i -style=Google *.h *.c
   - cd -
   - cd tests
-  - clang-format -i -style=Google *.h *.cpp *.c
+  - clang-format -i -style=Google *.cpp
   - cd -
   - cd trivialCounter
-  - clang-format -i -style=Google *.h *.cpp *.c
+  - clang-format -i -style=Google *.h *.c
   - cd -
 
 
