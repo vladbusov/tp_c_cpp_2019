@@ -16,11 +16,11 @@
 #define SIZE_OF_CHUNK 1000000
 
 int min(int a, int b);
-void charCounter(char* chars, int* cntChars, const char* buffer, int begin,
-                 int end);
-void readPipe(int* sharedCnt, int size, int* fd);
-void writePipe(char* countBuff, char* buffer, int* fd, int pid, int i);
-void interProcessCounter(char* buffer, char* countBuff, int* sharedCnt);
-void printResult(int* sharedCnt, int size);
+void char_counter(char* chars, int* cntChars, const char* buffer, int begin,
+                  int end);
+void read_pipe(int* sharedCnt, int size, int* fd);
+void write_pipe(char* countBuff, char* buffer, int* fd, int pid, int i);
+void prl_char_counter(char* buffer, char* countBuff, int* sharedCnt);
+void print_result(int* sharedCnt, int size);
 
-#endif  // DZ2_COUNTER_H
+#endif // DZ2_COUNTER_H

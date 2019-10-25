@@ -10,6 +10,6 @@
 #ifndef DZ2_TRIVIALCOUNTER_H
 #define DZ2_TRIVIALCOUNTER_H
 
-void charCount(char* chars, char* buffer, int* sharedCnt);
+void char_count(char* chars, char* buffer, int* sharedCnt);
 
 #endif //DZ2_TRIVIALCOUNTER_H

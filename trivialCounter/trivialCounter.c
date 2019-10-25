@@ -4,7 +4,7 @@
 
 #include "trivialCounter.h"
 
-void charCount(char* chars, char* buffer, int* sharedCnt) {
+void char_count(char* chars, char* buffer, int* sharedCnt) {
     int sizeChars = (int)strlen(chars);
     int sizeBuffer = (int)strlen(buffer);
 

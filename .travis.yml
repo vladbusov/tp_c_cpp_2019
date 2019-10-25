@@ -18,8 +18,10 @@ install:
   - sudo apt-get install lcov
   - sudo apt-get install libstdc++6
   - sudo apt-get install cmake
+  - sudo apt-get install curl
   # Google tests
   - sudo apt-get install libgtest-dev
+  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
   - cd /usr/src/gtest
   - sudo cmake .
   - sudo make
@@ -28,13 +30,13 @@ install:
 
 before_script:
   - cd Counter
-  - clang-format -i -style=Google *.h *.c
+  - find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\)' -exec clang-format -style=file -i {} \;
   - cd -
   - cd tests
-  - clang-format -i -style=Google *.cpp
+  - find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\)' -exec clang-format -style=file -i {} \;
   - cd -
   - cd trivialCounter
-  - clang-format -i -style=Google *.h *.c
+  - find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\)' -exec clang-format -style=file -i {} \;
   - cd -
 
 
@@ -46,5 +48,5 @@ script:
 after_script:
   - codecov
   - lcov --capture --directory ./CMakeFiles/dz2.dir/tests --output-file coverage.info
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -t b3894ef2-b7b6-4cba-8e8a-c658e61d4c88
   - make clean
