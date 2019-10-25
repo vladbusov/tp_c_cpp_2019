@@ -14,14 +14,11 @@ void char_counter(char* chars, int* cnt_chars, const char* buffer, int begin,
                   int end)
 {
     int size_chars = (int)strlen(chars);
-    int endr = 0;
-
     for (int i = begin; i <= end; i++) {
         for (int j = 0; j < size_chars; j++) {
             if (chars[j] == buffer[i])
                 cnt_chars[j] += 1;
         }
-        endr = i;
     }
 }
 
@@ -69,7 +66,6 @@ void prl_char_counter(char* buffer, char* count_buff, int* shared_cnt)
     }
 
     pid_t current = 0;
-    pid_t offset = getpid();
 
     for (int i = 0; i < num; i++) {
         pipe(fd[i]);
@@ -79,7 +75,6 @@ void prl_char_counter(char* buffer, char* count_buff, int* shared_cnt)
         pid_t iter = fork();
         if (iter == 0)
         {
-            // дочерний - создался и вышел
             current = i+1;
             break;
         }
@@ -101,21 +96,8 @@ void prl_char_counter(char* buffer, char* count_buff, int* shared_cnt)
 
     for (int i = 0; i < num; i++) {
         read_pipe(shared_cnt, (int) strlen(count_buff), fd[i]);
-    }
-
-    for (int i = 0; i < num; i++) {
         free(fd[i]);
     }
 
     free(fd);
-}
-
-void print_result(int* shared_cnt, int size)
-{
-    printf("Shared counter :\n[");
-
-    for (int i = 0; i < size; i++) {
-        printf("%d, ", shared_cnt[i]);
-    }
-    printf("]\n");
 }

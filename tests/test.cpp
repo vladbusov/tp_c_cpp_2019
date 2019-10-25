@@ -11,7 +11,6 @@ extern "C" {
 
 #define FILESIZE 104857600
 
-
 class TestSerialization : public ::testing::Test {
 public:
     TestSerialization()
@@ -57,9 +56,6 @@ TEST_F(TestSerialization, bufferTest)
 
     char_count(countBuff, buffer, result1);
     prl_char_counter(buffer, countBuff, result2);
-
-    print_result(result1, strlen(countBuff));
-    print_result(result2, strlen(countBuff));
 
     EXPECT_TRUE(0 == std::memcmp(result1, result2, strlen(countBuff) * sizeof(int)));
 
