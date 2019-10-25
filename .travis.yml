@@ -41,12 +41,11 @@ before_script:
 
 
 script:
-  - sudo cmake .
-  - sudo make || travis_terminate 1
+  - cmake .
+  - make || travis_terminate 1
   - valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --leak-resolution=med  --track-origins=yes ./dz2 || travis_terminate 1
 
 after_script:
-  - codecov
   - lcov --capture --directory ./CMakeFiles/dz2.dir/tests --output-file coverage.info
   - bash <(curl -s https://codecov.io/bash) -t b3894ef2-b7b6-4cba-8e8a-c658e61d4c88
   - make clean
