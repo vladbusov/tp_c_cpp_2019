@@ -13,13 +13,14 @@
 // Created by vlad on 20.10.2019.
 //
 
-#define SIZE_OF_CHUNK 1000000
+#define NUM_OF_PROCESSES 228
+#define SIZE_OF_CHUNK (104857600/NUM_OF_PROCESSES)
 
 int min(int a, int b);
 void char_counter(char* chars, int* cnt_chars, const char* buffer, int begin,
                   int end);
 void read_pipe(int* shared_cnt, int size, int* fd);
-void write_pipe(char* count_buff, char* buffer, int* fd, int pid, int i);
+void write_pipe(char* count_buff, char* buffer, int* fd, int i);
 void prl_char_counter(char* buffer, char* count_buff, int* shared_cnt);
 void print_result(int* shared_cnt, int size);
 
