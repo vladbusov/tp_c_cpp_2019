@@ -21,7 +21,7 @@ void char_counter(char* chars, int* cnt_chars, const char* buffer, int begin,
     }
 }
 
-__attribute__((always_inline)) void read_pipe(int* shared_cnt, int size, int* fd)
+void read_pipe(int* shared_cnt, int size, int* fd)
 {
     int* buf;
     int errflag;
@@ -64,6 +64,7 @@ void write_pipe(char* count_buff, char* buffer, int* fd, int i)
 void prl_char_counter(char* buffer, char* count_buff, int* shared_cnt)
 {
     unsigned long num;
+//    printf("%d mod %d = %d\n", strlen(buffer), SIZE_OF_CHUNK,strlen(buffer) % SIZE_OF_CHUNK == 0);
     if (unlikely(strlen(buffer) % SIZE_OF_CHUNK == 0))
         num = ((unsigned long)strlen(buffer)) / SIZE_OF_CHUNK;
     else

@@ -15,7 +15,7 @@ class TestSerialization : public ::testing::Test {
 public:
     TestSerialization()
     {
-        FILE* mf = fopen("test.txt", "w");
+        FILE* mf = fopen("test1.txt", "w");
 
         srand(time(NULL));
 
@@ -25,6 +25,8 @@ public:
         }
 
         fclose(mf);
+
+
     }
     ~TestSerialization() override
     { /* free protected members here */
@@ -46,6 +48,8 @@ TEST_F(TestSerialization, bufferTest)
     char* buffer = new char[FILESIZE];
     fgets(buffer, FILESIZE, mf);
     fclose(mf);
+
+
 
     char countBuff[] = "Vlad Busov";
 
