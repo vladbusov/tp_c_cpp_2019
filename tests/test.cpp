@@ -40,7 +40,7 @@ protected:
     /* none yet */
 };
 
-TEST_F(TestSerialization, testRealization)
+TEST_F(TestSerialization, bufferTest)
 {
     FILE* mf = fopen("test.txt", "r");
     char* buffer = new char[FILESIZE];

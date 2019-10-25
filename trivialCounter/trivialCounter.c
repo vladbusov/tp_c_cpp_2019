@@ -4,14 +4,14 @@
 
 #include "trivialCounter.h"
 
-void char_count(char* chars, char* buffer, int* sharedCnt) {
-    int sizeChars = (int)strlen(chars);
-    int sizeBuffer = (int)strlen(buffer);
+void char_count(char* chars, char* buffer, int* shared_cnt) {
+    int size_chars = (int)strlen(chars);
+    int size_buffer = (int)strlen(buffer);
 
-    for (int i = 0; i < sizeBuffer; i++) {
-        for (int j = 0; j < sizeChars; j++) {
+    for (int i = 0; i < size_buffer; i++) {
+        for (int j = 0; j < size_chars; j++) {
             if (chars[j] == buffer[i])
-                sharedCnt[j] += 1;
+                shared_cnt[j] += 1;
         }
     }
 }
