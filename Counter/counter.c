@@ -5,7 +5,6 @@
 //
 // Created by vlad on 20.10.2019.
 //
-#include <wait.h>
 #include "counter.h"
 
 int min(int a, int b) { return (a < b) ? a : b; }
@@ -22,25 +21,35 @@ void char_counter(char* chars, int* cnt_chars, const char* buffer, int begin,
     }
 }
 
-void read_pipe(int* shared_cnt, int size, int* fd)
+__attribute__((always_inline)) void read_pipe(int* shared_cnt, int size, int* fd)
 {
-    int* buf = calloc(size, sizeof(int));
+    int* buf;
+    int errflag;
+
+    long l1dcls = sysconf(_SC_LEVEL1_DCACHE_LINESIZE);
+
+    if (unlikely(l1dcls == -1))
+        l1dcls = sizeof(void*);
+
+    errflag = posix_memalign((void**)&buf, l1dcls, sizeof(int)*size);
+
+    if (unlikely(errflag != 0))
+        buf = calloc(size, sizeof(int));
 
     close(fd[1]);
     read(fd[0], buf, sizeof(int)*size);
     close(fd[0]);
 
-    for (int j = 0; j < size; j++) {
+    for (int j = 0; j < size; j++)
         shared_cnt[j] += buf[j];
-    }
-    free(buf);
 
+    free(buf);
 }
 
 void write_pipe(char* count_buff, char* buffer, int* fd, int i)
 {
 
-    int* cnt = calloc(strlen(count_buff), sizeof(int));
+    int* cnt = (int*)calloc(strlen(count_buff),sizeof(int));
 
     char_counter(count_buff, cnt, buffer, SIZE_OF_CHUNK * i,
                  min(SIZE_OF_CHUNK * (i + 1), (int) strlen(buffer)  ) -1);
@@ -55,7 +64,7 @@ void write_pipe(char* count_buff, char* buffer, int* fd, int i)
 void prl_char_counter(char* buffer, char* count_buff, int* shared_cnt)
 {
     unsigned long num;
-    if (strlen(buffer) % SIZE_OF_CHUNK == 0)
+    if (unlikely(strlen(buffer) % SIZE_OF_CHUNK == 0))
         num = ((unsigned long)strlen(buffer)) / SIZE_OF_CHUNK;
     else
         num = ((unsigned long)strlen(buffer)) / SIZE_OF_CHUNK + 1;
@@ -73,19 +82,19 @@ void prl_char_counter(char* buffer, char* count_buff, int* shared_cnt)
 
     for (int i = 0; i < num; i++) {
         pid_t iter = fork();
-        if (iter == 0)
+        if (likely(iter == 0))
         {
             current = i+1;
             break;
         }
         else if (iter == -1)
         {
-            fprintf(stderr, "Too match processes created!");
+            fprintf(stderr, "Too match processes created!\n");
             return;
         }
     }
 
-    if (current != 0) {
+    if (likely(current != 0)) {
         write_pipe(count_buff, buffer, fd[current - 1], current - 1);
         exit(0);
     } else {
