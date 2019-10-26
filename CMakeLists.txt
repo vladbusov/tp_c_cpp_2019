@@ -19,7 +19,7 @@ include_directories(
 )
 
 add_library(trivialCounter STATIC trivialCounter/trivialCounter.c)
-add_library(counter STATIC Counter/counter.c)
+add_library(counter SHARED Counter/counter.c)
 add_executable(dz2 tests/test.cpp)
 
 
