@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.10)
 project(dz2)
 
 find_package(GTest REQUIRED)
@@ -18,6 +18,11 @@ include_directories(
         ./trivialCounter
         ./production
 )
+
+if(COMMAND cmake_policy)
+    cmake_policy(SET CMP0003 NEW)
+endif(COMMAND cmake_policy)
+
 
 add_library(trivialCounter STATIC trivialCounter/trivialCounter.c)
 add_library(counter SHARED Counter/counter.c)

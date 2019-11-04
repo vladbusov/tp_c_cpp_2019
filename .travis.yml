@@ -20,15 +20,6 @@ install:
   - sudo apt-get install cppcheck
   - sudo apt-get install curl
   - sudo apt-get install clang-format
-  - mkdir settings
-  - cd settings
-  - sudo wget -qO- "https://cmake.org/files/v3.15/cmake-3.15.4-Linux-x86_64.tar.gz" | tar --strip-components=1 -xz -C /usr/local
-#  - tar -xzf cmake-3.15.5.tar.gz cmake-3.15.5/
-#  - cd cmake-3.15.5/
-#  - ./bootstrap
-#  - make
-#  - sudo make install
-#  - cd ../../
   # Google tests
   - sudo apt-get install libgtest-dev
   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
@@ -40,13 +31,13 @@ install:
 
 before_script:
   - cd Counter
-  - clang-format -i -style=Google *.h *.c
+  - clang-format -i -style=Google *.h *.c || travis_terminate 1
   - cd ../production
-  - clang-format -i -style=Google *.cpp
+  - clang-format -i -style=Google *.cpp || travis_terminate 1
   - cd ../tests
-  - clang-format -i -style=Google *.cpp
+  - clang-format -i -style=Google *.cpp || travis_terminate 1
   - cd ../trivialCounter
-  - clang-format -i -style=Google *.h *.c
+  - clang-format -i -style=Google *.h *.c || travis_terminate 1
   - cd ..
   - ./linters/run.sh || travis_terminate 1
 
