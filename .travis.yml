@@ -19,6 +19,7 @@ install:
   - sudo apt-get install libstdc++6
   - sudo apt-get install cppcheck
   - sudo apt-get install curl
+  - sudo apt-get install clang-format
   - mkdir settings
   - cd settings
   - wget https://cmake.org/files/v3.15/cmake-3.15.5.tar.gz
