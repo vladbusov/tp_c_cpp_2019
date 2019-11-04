@@ -45,9 +45,9 @@ before_script:
 script:
   - cmake . || travis_terminate 1
   - make || travis_terminate 1
-  - ./maketxt || travis_terminate 1
-  - valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --leak-resolution=med  --track-origins=yes ./dz2trivial || travis_terminate 1
-  - valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --leak-resolution=med  --track-origins=yes ./dz2parallel || travis_terminate 1
+  - ./maketxt test.txt || travis_terminate 1
+  - valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --leak-resolution=med  --track-origins=yes ./dz2trivial test.txt || travis_terminate 1
+  - valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --leak-resolution=med  --track-origins=yes ./dz2parallel test.txt || travis_terminate 1
   - ./dz2tests || travis_terminate 1
 
 after_script:
