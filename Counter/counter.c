@@ -64,9 +64,9 @@ void write_pipe(char* count_buff, char* buffer, int* fd, int i, const unsigned l
 }
 
 void prl_char_counter(char* count_buff, char* buffer, int* shared_cnt) {
-    long numOfProcesses = sysconf(_SC_NPROCESSORS_ONLN) * 3;
+    long numOfProcesses = sysconf(_SC_NPROCESSORS_ONLN) * 2 + 1;
 
-    const unsigned long sizeOfChunk = (long)strlen(buffer) / numOfProcesses;
+    const unsigned long sizeOfChunk = (long)strlen(buffer) / numOfProcesses + 1;
 
 
     int** fd = (int**)calloc(numOfProcesses, sizeof(int*));

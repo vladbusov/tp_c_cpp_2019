@@ -46,6 +46,9 @@ TEST_F(TestSerialization, bufferTest) {
     prl_char_counter(countBuff, buffer, result2);
 
 
+    for (int i = 0; i < (int)strlen(countBuff); i++)
+        printf("(%d - %d) ", result1[i], result2[i]);
+
     EXPECT_EQ(0, std::memcmp(result1, result2, strlen(countBuff) * sizeof(int)));
 
     delete[] result1;
