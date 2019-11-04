@@ -1,4 +1,4 @@
-#cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.15)
 project(dz2)
 
 find_package(GTest REQUIRED)
@@ -16,16 +16,24 @@ include_directories(
         ./tests
         ./Counter
         ./trivialCounter
+        ./production
 )
 
-add_library(trivialCounter SHARED trivialCounter/trivialCounter.c)
-add_library(counter STATIC Counter/counter.c)
-add_executable(dz2 tests/test.cpp)
-
-
+add_library(trivialCounter STATIC trivialCounter/trivialCounter.c)
+add_library(counter SHARED Counter/counter.c)
+add_executable(dz2tests tests/test.cpp)
+add_executable(dz2trivial production/prod_trivial.cpp)
+add_executable(dz2parallel production/prod_parallel.cpp)
+add_executable(maketxt production/maketxt.cpp)
 
 target_link_libraries(
-        dz2 ${GTEST_LIBRARIES} Threads::Threads trivialCounter counter)
+        dz2tests ${GTEST_LIBRARIES} Threads::Threads trivialCounter counter)
+
+target_link_libraries(
+        dz2trivial trivialCounter)
+
+target_link_libraries(
+        dz2parallel counter)
 
 option(PACKAGE_TESTS "Build the tests" ON)
 if(PACKAGE_TESTS)

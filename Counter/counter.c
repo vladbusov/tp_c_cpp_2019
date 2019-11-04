@@ -7,13 +7,13 @@
 //
 #include "counter.h"
 
-int min(int a, int b) { return (a < b) ? a : b; }
+unsigned long min(const unsigned long a, const unsigned long b) { return (a < b) ? a : b; }
 
-void char_counter(char* chars, int* cnt_chars, const char* buffer, int begin,
-                  int end)
+void char_counter(char* chars, int* cnt_chars, const char* buffer, const unsigned long begin,
+                  const unsigned long end)
 {
     int size_chars = (int)strlen(chars);
-    for (int i = begin; i <= end; i++) {
+    for (unsigned long i = begin; i <= end; i++) {
         for (int j = 0; j < size_chars; j++) {
             if (chars[j] == buffer[i])
                 cnt_chars[j] += 1;
@@ -21,7 +21,7 @@ void char_counter(char* chars, int* cnt_chars, const char* buffer, int begin,
     }
 }
 
-__attribute__((always_inline)) void read_pipe(int* shared_cnt, int size, int* fd)
+void read_pipe(int* shared_cnt, int size, int* fd)
 {
     int* buf;
     int errflag;
@@ -46,41 +46,46 @@ __attribute__((always_inline)) void read_pipe(int* shared_cnt, int size, int* fd
     free(buf);
 }
 
-void write_pipe(char* count_buff, char* buffer, int* fd, int i)
+void write_pipe(char* count_buff, char* buffer, int* fd, int i, const unsigned long sizeOfChunk)
 {
 
     int* cnt = (int*)calloc(strlen(count_buff),sizeof(int));
 
-    char_counter(count_buff, cnt, buffer, SIZE_OF_CHUNK * i,
-                 min(SIZE_OF_CHUNK * (i + 1), (int) strlen(buffer)  ) -1);
+    char_counter(count_buff, cnt, buffer,sizeOfChunk * (long)i,
+                 min(sizeOfChunk * (i + 1), (int) strlen(buffer)  ) -1);
 
     close(fd[0]);
-    int err = write(fd[1], cnt, sizeof(int) * strlen(count_buff));
+
+    if(!write(fd[1], cnt, sizeof(int) * strlen(count_buff))) {
+        fprintf(stderr, "Write pipe error!\n");
+        return;
+    }
+
+
     close(fd[1]);
 
     free(cnt);
 }
 
-void prl_char_counter(char* buffer, char* count_buff, int* shared_cnt)
+void prl_char_counter(char* count_buff, char* buffer, int* shared_cnt)
 {
-    unsigned long num;
-    if (unlikely(strlen(buffer) % SIZE_OF_CHUNK == 0))
-        num = ((unsigned long)strlen(buffer)) / SIZE_OF_CHUNK;
-    else
-        num = ((unsigned long)strlen(buffer)) / SIZE_OF_CHUNK + 1;
+    long numOfProcesses = sysconf(_SC_NPROCESSORS_ONLN) * 3;
 
-    int** fd = (int**)calloc(num, sizeof(int*));
-    for (int i = 0; i < num; i++) {
+    const unsigned long sizeOfChunk = (long)strlen(buffer) / numOfProcesses;
+
+
+    int** fd = (int**)calloc(numOfProcesses, sizeof(int*));
+    for (long i = 0; i < numOfProcesses; i++) {
         fd[i] = (int*)calloc(2, sizeof(int));
     }
 
     pid_t current = 0;
 
-    for (int i = 0; i < num; i++) {
+    for (long i = 0; i < numOfProcesses; i++) {
         pipe(fd[i]);
     }
 
-    for (int i = 0; i < num; i++) {
+    for (long i = 0; i < numOfProcesses; i++) {
         pid_t iter = fork();
         if (likely(iter == 0))
         {
@@ -95,7 +100,7 @@ void prl_char_counter(char* buffer, char* count_buff, int* shared_cnt)
     }
 
     if (likely(current != 0)) {
-        write_pipe(count_buff, buffer, fd[current - 1], current - 1);
+        write_pipe(count_buff, buffer, fd[current - 1], current - 1, sizeOfChunk);
         exit(0);
     } else {
         wait(NULL);
@@ -103,7 +108,7 @@ void prl_char_counter(char* buffer, char* count_buff, int* shared_cnt)
 
 
 
-    for (int i = 0; i < num; i++) {
+    for (long i = 0; i < numOfProcesses; i++) {
         read_pipe(shared_cnt, (int) strlen(count_buff), fd[i]);
         free(fd[i]);
     }

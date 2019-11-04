@@ -17,8 +17,14 @@ install:
   - sudo apt-get install clang-format
   - sudo apt-get install lcov
   - sudo apt-get install libstdc++6
-  - sudo apt-get install cmake
+  - sudo apt-get install cppcheck
   - sudo apt-get install curl
+  - wget https://cmake.org/files/v3.15/cmake-3.15.5.tar.gz
+  - tar -xzf cmake-3.15.5.tar.gz cmake-3.15.5/
+  - cd cmake-3.15.5/
+  - ./bootstrap
+  - make
+  - sudo make install
   # Google tests
   - sudo apt-get install libgtest-dev
   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
@@ -28,22 +34,15 @@ install:
   - sudo cp *.a /usr/lib
   - cd -
 
-before_script:
-  - cd Counter
-  - find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\)' -exec clang-format -style=file -i {} \;
-  - cd -
-  - cd tests
-  - find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\)' -exec clang-format -style=file -i {} \;
-  - cd -
-  - cd trivialCounter
-  - find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\)' -exec clang-format -style=file -i {} \;
-  - cd -
-
+#before_script:
 
 script:
-  - cmake .
+  - cmake . || travis_terminate 1
   - make || travis_terminate 1
-  - valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --leak-resolution=med  --track-origins=yes ./dz2 || travis_terminate 1
+  - ./maketxt || travis_terminate 1
+  - valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --leak-resolution=med  --track-origins=yes ./dz2trivial || travis_terminate 1
+  - valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --leak-resolution=med  --track-origins=yes ./dz2parallel || travis_terminate 1
+  - ./dz2tests || travis_terminate 1
 
 after_script:
   - lcov --capture --directory ./CMakeFiles/dz2.dir/tests --output-file coverage.info
