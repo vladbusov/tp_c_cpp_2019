@@ -10,8 +10,7 @@
 unsigned long min(const unsigned long a, const unsigned long b) { return (a < b) ? a : b; }
 
 void char_counter(char* chars, int* cnt_chars, const char* buffer, const unsigned long begin,
-                  const unsigned long end)
-{
+                  const unsigned long end) {
     int size_chars = (int)strlen(chars);
     for (unsigned long i = begin; i <= end; i++) {
         for (int j = 0; j < size_chars; j++) {
@@ -21,8 +20,7 @@ void char_counter(char* chars, int* cnt_chars, const char* buffer, const unsigne
     }
 }
 
-void read_pipe(int* shared_cnt, int size, int* fd)
-{
+void read_pipe(int* shared_cnt, int size, int* fd) {
     int* buf;
     int errflag;
 
@@ -46,17 +44,15 @@ void read_pipe(int* shared_cnt, int size, int* fd)
     free(buf);
 }
 
-void write_pipe(char* count_buff, char* buffer, int* fd, int i, const unsigned long sizeOfChunk)
-{
+void write_pipe(char* count_buff, char* buffer, int* fd, int i, const unsigned long sizeOfChunk) {
+    int* cnt = (int*)calloc(strlen(count_buff), sizeof(int));
 
-    int* cnt = (int*)calloc(strlen(count_buff),sizeof(int));
-
-    char_counter(count_buff, cnt, buffer,sizeOfChunk * (long)i,
-                 min(sizeOfChunk * (i + 1), (int) strlen(buffer)  ) -1);
+    char_counter(count_buff, cnt, buffer, sizeOfChunk * (long)i,
+                 min(sizeOfChunk * (i + 1), (int) strlen(buffer)) - 1);
 
     close(fd[0]);
 
-    if(!write(fd[1], cnt, sizeof(int) * strlen(count_buff))) {
+    if (!write(fd[1], cnt, sizeof(int) * strlen(count_buff))) {
         fprintf(stderr, "Write pipe error!\n");
         return;
     }
@@ -67,8 +63,7 @@ void write_pipe(char* count_buff, char* buffer, int* fd, int i, const unsigned l
     free(cnt);
 }
 
-void prl_char_counter(char* count_buff, char* buffer, int* shared_cnt)
-{
+void prl_char_counter(char* count_buff, char* buffer, int* shared_cnt) {
     long numOfProcesses = sysconf(_SC_NPROCESSORS_ONLN) * 3;
 
     const unsigned long sizeOfChunk = (long)strlen(buffer) / numOfProcesses;
@@ -87,13 +82,10 @@ void prl_char_counter(char* count_buff, char* buffer, int* shared_cnt)
 
     for (long i = 0; i < numOfProcesses; i++) {
         pid_t iter = fork();
-        if (likely(iter == 0))
-        {
+        if (likely(iter == 0)) {
             current = i+1;
             break;
-        }
-        else if (iter == -1)
-        {
+        } else if (iter == -1) {
             fprintf(stderr, "Too match processes created!\n");
             return;
         }

@@ -1,7 +1,3 @@
-//
-// Created by vlad on 21.10.2019.
-//
-
 #include "trivialCounter.h"
 
 void char_count(char* chars, char* buffer, int* shared_cnt) {

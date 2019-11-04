@@ -1,6 +1,4 @@
 #include <cstring>
-#include <ctime>
-#include <gtest/gtest.h>
 #include <iostream>
 #include <fstream>
 
@@ -32,7 +30,7 @@ int main(int argc, char** argv) {
 
     string buffStr = readFile(argv[1]);
     char* buffChar = new char[buffStr.size() + 1];
-    strcpy(buffChar,buffStr.c_str());
+    snprintf(buffChar, buffStr.size()+ 1, "%s", buffStr.c_str());
 
     char countBuff[] = "Vlad Busov";
 

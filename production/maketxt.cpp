@@ -1,6 +1,5 @@
 #include <cstring>
 #include <ctime>
-#include <gtest/gtest.h>
 #include <iostream>
 #include <fstream>
 
@@ -14,10 +13,11 @@ using std::exception;
 void makeTestFile(const string& fileName) {
     ofstream testFile(fileName);
 
+    unsigned int seed = 0;
     srand(time(NULL));
 
     for (int i = 0; i < FILESIZE; i++) {
-        char ch = (rand() % 94) + 32;
+        char ch = (rand_r(&seed) % 94) + 32;
         testFile << ch;
     }
     testFile.close();
