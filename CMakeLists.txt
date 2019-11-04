@@ -24,8 +24,8 @@ if(COMMAND cmake_policy)
 endif(COMMAND cmake_policy)
 
 
-add_library(trivialCounter STATIC trivialCounter/trivialCounter.c)
-add_library(counter SHARED Counter/counter.c)
+add_library(trivialCounter SHARED trivialCounter/trivialCounter.c)
+add_library(counter STATIC Counter/counter.c)
 add_executable(dz2tests tests/test.cpp)
 add_executable(dz2trivial production/prod_trivial.cpp)
 add_executable(dz2parallel production/prod_parallel.cpp)
