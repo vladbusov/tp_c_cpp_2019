@@ -42,9 +42,9 @@ before_script:
   - cd Counter
   - clang-format -i -style=Google *.h *.c
   - cd ../production
-  - clang-format -i -style=Google *.h *.cpp
+  - clang-format -i -style=Google *.cpp
   - cd ../tests
-  - clang-format -i -style=Google *.h *.cpp
+  - clang-format -i -style=Google *.cpp
   - cd ../trivialCounter
   - clang-format -i -style=Google *.h *.c
   - cd ..
